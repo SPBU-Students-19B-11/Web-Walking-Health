@@ -6,6 +6,7 @@
             rounded
             color="#423189"
             dark
+            @click="$router.push('/registration')"
         >Зарегистрироваться</v-btn>
     </div>
 </template>
