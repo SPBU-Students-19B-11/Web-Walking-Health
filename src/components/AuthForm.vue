@@ -12,8 +12,6 @@
         label="Логин"
         required
         :rules="rules.login"
-        @input="$v.name.$touch()"
-        @blur="$v.name.$touch()"
       ></v-text-field>
       <v-text-field
         class="welcome__field"
@@ -22,8 +20,6 @@
         label="Пароль"
         required
         :rules="rules.password"
-        @input="$v.email.$touch()"
-        @blur="$v.email.$touch()"
       ></v-text-field>
       <div class="welcome__btns">
         <a class="welcome__link" href="">Забыли пароль?</a>

@@ -1,7 +1,9 @@
 <template>
   <v-app>
-    <div class="container">
-      <router-view></router-view>
+    <div class="body">
+      <div class="container1">
+        <router-view></router-view>
+      </div>
     </div>
   </v-app>
 </template>
@@ -21,10 +23,17 @@ export default {
 };
 </script>
 
-<style scoped>
-.container {
+<style>
+.body{
+  background-color: #EDEEF0;
+  min-height: 100%;
+  min-width: 100%;
+}
+.container1 {
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
   height: 100%;
+  padding: 0;
 }
 </style>

@@ -5,27 +5,12 @@
       Здесь будет описание. Пожалуйста, заполните данные и идентифицируйте себя
     </div>
     <form class="welcome__form">
-        <v-radio-group
-            mandatory
-            v-model="form.user"
-        >
-            <v-radio
-                :label="'Я пациент'"
-                value="patient"
-            ></v-radio>
-            <v-radio
-                :label="'Я врач'"
-                value="doctor"
-            ></v-radio>
-        </v-radio-group>
       <v-text-field
         class="welcome__field"
         v-model="form.login"
         label="Логин"
         required
         :rules="rules.login"
-        @input="$v.name.$touch()"
-        @blur="$v.name.$touch()"
       ></v-text-field>
       <v-text-field
         class="welcome__field"
@@ -34,8 +19,6 @@
         label="Пароль"
         required
         :rules="rules.password"
-        @input="$v.email.$touch()"
-        @blur="$v.email.$touch()"
       ></v-text-field>
       <v-text-field
         class="welcome__field"
@@ -44,8 +27,6 @@
         label="Повторите пароль"
         required
         :rules="rules.passwordRepeat"
-        @input="$v.email.$touch()"
-        @blur="$v.email.$touch()"
       ></v-text-field>
       <v-text-field
         class="welcome__field"
@@ -53,18 +34,7 @@
         label="ФИО"
         required
         :rules="rules.fullName"
-        @input="$v.email.$touch()"
-        @blur="$v.email.$touch()"
       ></v-text-field>
-        <v-autocomplete
-            v-if="form.user === 'patient'"
-            ref="doctorFullName"
-            v-model="form.doctorFullName"
-            :rules="rules.doctorFullName"
-            :items="doctors"
-            label="ФИО лечущего врача"
-            required
-        ></v-autocomplete>
       <div class="welcome__btns">
         <a
           :class="{ disabled: !formIsValid }"
@@ -99,7 +69,6 @@ export default {
         doctorFullName: [(val) => (val || "").length > 0 || "Укажите лечущего врача"]
       },
       defaultForm,
-      doctors: ['Игнатьев Клим Платонович', 'Фролов Геннадий Николаевич', 'Ситников Игнат Протасьевич', 'Белов Назарий Альвианович']
     };
   },
   computed: {
@@ -109,7 +78,6 @@ export default {
                 && this.form.password 
                 && (this.form.password === this.form.passwordRepeat)
                 && this.form.fullName
-                && this.form.doctorFullName;
         }
 
       return this.form.login 
