@@ -1,5 +1,17 @@
 <template>
   <div class="welcome">
+    <loader
+      v-if="loading"
+      object="#489EE2"
+      color1="#ffffff"
+      color2="#423189"
+      size="5"
+      speed="2"
+      bg="#343a40"
+      objectbg="#999793"
+      opacity="80"
+      name="circular"
+    ></loader>
     <h2 class="welcome__header">Добро пожаловать!</h2>
     <div class="welcome__description">
       Здесь будет описание. Для авторизации введите свой логин и пароль,
@@ -27,7 +39,7 @@
           :class="{ disabled: !formIsValid }"
           class="welcome__link"
           href=""
-          @click.prevent="$router.push('/profile')"
+          @click.prevent="sendLogin"
           >Войти</a
         >
       </div>
@@ -36,6 +48,8 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
+
 export default {
   data() {
     const defaultForm = Object.freeze({
@@ -50,9 +64,36 @@ export default {
         password: [(val) => (val || "").length > 0 || "Введите пароль"],
       },
       defaultForm,
+      loading: false,
     };
   },
+
+  methods: {
+    ...mapActions({
+      login: "auth/login",
+    }),
+
+    async sendLogin() {
+      this.loading = true;
+      await this.login({
+        login: this.form.login,
+        password: this.form.password,
+      });
+
+      this.loading = false;
+      if (localStorage.getItem("token")) {
+        this.$router.push("/profile");
+      } else {
+        alert("Логин или пароль были введены неверно");
+      }
+    },
+  },
+
   computed: {
+    ...mapState({
+      status: (state) => state.auth.status,
+    }),
+
     formIsValid() {
       return this.form.login && this.form.password;
     },

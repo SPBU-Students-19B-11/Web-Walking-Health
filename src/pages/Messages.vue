@@ -1,20 +1,34 @@
 <template>
   <div style="max-height: 10vh">
+    <loader
+      v-if="loading"
+      object="#489EE2"
+      color1="#ffffff"
+      color2="#423189"
+      size="5"
+      speed="2"
+      bg="#343a40"
+      objectbg="#999793"
+      opacity="80"
+      name="circular"
+    ></loader>
     <div class="header">
       <div class="header__name">Чат</div>
-      <button @click="$router.push('/profile')">Назад</button>
+      <button @click="$router.push(`/patient/${$route.params.login}`)">
+        Назад
+      </button>
     </div>
     <div class="messages">
       <div class="messages__body">
-          <v-card 
-            style="margin-top: 5px"
-            v-for="message in messages" 
-            :key="message.time"
-          >
-            <v-card-title>{{ message.user }}</v-card-title>
-            <v-card-subtitle>{{ message.time }}</v-card-subtitle>
-            <v-card-text>{{ message.text }}</v-card-text>
-          </v-card>
+        <v-card
+          style="margin-top: 5px"
+          v-for="message in messages"
+          :key="message.id"
+        >
+          <v-card-title>{{ message.user }}</v-card-title>
+          <v-card-subtitle>{{ message.time }}</v-card-subtitle>
+          <v-card-text>{{ message.text }}</v-card-text>
+        </v-card>
       </div>
       <div class="messages__footer">
         <v-form>
@@ -30,6 +44,7 @@
                   label="Сообщение"
                   type="text"
                   @click:append-outer="sendMessage"
+                  @keydown.enter.prevent="sendMessage"
                   @click:clear="clearMessage"
                 ></v-text-field>
               </v-col>
@@ -42,62 +57,59 @@
 </template>
 
 <script>
-  export default {
-    data: () => ({
-      password: 'Password',
-      show: false,
-      message: 'Hey!',
-      marker: true,
-      iconIndex: 0,
-      messages: [{
-        user: 'Иванов Иван Иванович',
-        time: '12:30',
-        text: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Esse quod quis nesciunt nisi ipsam vitae. Nam reprehenderit ad nulla harum ab doloribus, cum ipsa excepturi dicta voluptatibus odio, quo itaque!'
-      },
-      {
-        user: 'Иванов Иван Иванович',
-        time: '12:31',
-        text: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Esse quod quis nesciunt nisi ipsam vitae. Nam reprehenderit ad nulla harum ab doloribus, cum ipsa excepturi dicta voluptatibus odio, quo itaque!'
-      },
-      {
-        user: 'Иванов Иван Иванович',
-        time: '12:32',
-        text: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Esse quod quis nesciunt nisi ipsam vitae. Nam reprehenderit ad nulla harum ab doloribus, cum ipsa excepturi dicta voluptatibus odio, quo itaque!'
-      },
-      {
-        user: 'Иванов Иван Иванович',
-        time: '12:33',
-        text: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Esse quod quis nesciunt nisi ipsam vitae. Nam reprehenderit ad nulla harum ab doloribus, cum ipsa excepturi dicta voluptatibus odio, quo itaque!'
-      },
-      {
-        user: 'Иванов Иван Иванович',
-        time: '12:34',
-        text: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Esse quod quis nesciunt nisi ipsam vitae. Nam reprehenderit ad nulla harum ab doloribus, cum ipsa excepturi dicta voluptatibus odio, quo itaque!'
-      },
-      {
-        user: 'Иванов Иван Иванович',
-        time: '12:35',
-        text: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Esse quod quis nesciunt nisi ipsam vitae. Nam reprehenderit ad nulla harum ab doloribus, cum ipsa excepturi dicta voluptatibus odio, quo itaque!'
-      }]
+import { mapState, mapActions } from "vuex";
+
+export default {
+  data: () => ({
+    password: "Password",
+    show: false,
+    message: "",
+    marker: true,
+    iconIndex: 0,
+    loading: false,
+  }),
+
+  methods: {
+    ...mapActions({
+      loadMessages: "message/loadMessages",
+      send: "message/sendMessage",
     }),
 
-    methods: {
-      sendMessage () {
-        this.messages.unshift({
-          user: 'Иванов Сергей Иванович',
-          time: new Date().getHours() + ':' + new Date().getMinutes(),
-          text: this.message
-        })
-        this.clearMessage();
-      },
-      clearMessage () {
-        this.message = ''
-      },
-      resetIcon () {
-        this.iconIndex = 0
-      }
+    async sendMessage() {
+      this.loading = true;
+      await this.send({
+        message: this.message,
+        login: this.$route.params.login,
+      });
+      this.clearMessage();
+      this.loading = false;
     },
-  }
+    clearMessage() {
+      this.message = "";
+    },
+    resetIcon() {
+      this.iconIndex = 0;
+    },
+  },
+
+  computed: {
+    ...mapState({
+      messages: (state) => state.message.messages,
+    }),
+  },
+
+  beforeCreate() {
+    if (!localStorage.getItem("token")) {
+      this.$router.push("/");
+    }
+  },
+
+  async mounted() {
+    this.loading = true;
+    await this.loadMessages(this.$route.params.login);
+    this.loading = false;
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -126,14 +138,17 @@ button {
 }
 
 .messages {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 
-    &__body{
-      max-height: 79vh;
-      overflow: auto;
-      display: flex;
-      flex-direction: column-reverse;
-    }
+  &__body {
+    margin-top: 15px;
+    border: 2px solid #8a8a8b;
+    border-radius: 5px;
+    max-height: 78vh;
+    overflow: auto;
+    display: flex;
+    flex-direction: column-reverse;
+  }
 }
 </style>

@@ -9,13 +9,10 @@
 </template>
 
 <script>
-
-
 export default {
-  name: 'App',
+  name: "App",
 
-  components: {
-  },
+  components: {},
 
   data: () => ({
     //
@@ -24,8 +21,12 @@ export default {
 </script>
 
 <style>
-.body{
-  background-color: #EDEEF0;
+body {
+  background-color: #edeef0;
+}
+
+.body {
+  background-color: #edeef0;
   min-height: 100%;
   min-width: 100%;
 }

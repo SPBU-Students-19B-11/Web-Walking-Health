@@ -20,6 +20,12 @@ export default {
       AuthForm,
       ToRegistration 
   },
+
+  beforeCreate() {
+    if (localStorage.getItem('token')) {
+      this.$router.push('/profile');
+    }
+  }
 };
 </script>
 

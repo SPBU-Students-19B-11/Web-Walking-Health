@@ -1,5 +1,17 @@
 <template>
   <div class="welcome">
+    <loader
+      v-if="loading"
+      object="#489EE2"
+      color1="#ffffff"
+      color2="#423189"
+      size="5"
+      speed="2"
+      bg="#343a40"
+      objectbg="#999793"
+      opacity="80"
+      name="circular"
+    ></loader>
     <h2 class="welcome__header">Регистрация</h2>
     <div class="welcome__description">
       Здесь будет описание. Пожалуйста, заполните данные и идентифицируйте себя
@@ -40,7 +52,7 @@
           :class="{ disabled: !formIsValid }"
           class="welcome__link"
           href=""
-          @click.prevent="$router.push('/profile')"
+          @click.prevent="inputRegistartion"
           >Зарегистрироваться</a
         >
       </div>
@@ -49,14 +61,13 @@
 </template>
 
 <script>
+import { mapActions, mapMutations, mapState } from "vuex";
 export default {
   data() {
     const defaultForm = Object.freeze({
       login: "",
       password: "",
-      user: 'patient',
-      fullName: '',
-      doctorFullName: ''
+      fullName: "",
     });
 
     return {
@@ -64,26 +75,72 @@ export default {
       rules: {
         login: [(val) => (val || "").length > 0 || "Введите логин"],
         password: [(val) => (val || "").length > 0 || "Введите пароль"],
-        passwordRepeat: [(val) => (val || "") === this.form.password || "Пароли не совпадают"],
+        passwordRepeat: [
+          (val) => (val || "") === this.form.password || "Пароли не совпадают",
+        ],
         fullName: [(val) => (val || "").length > 0 || "Введите ФИО"],
-        doctorFullName: [(val) => (val || "").length > 0 || "Укажите лечущего врача"]
       },
       defaultForm,
+      loading: false,
     };
   },
-  computed: {
-    formIsValid() {
-        if (this.form.user === 'patient') {
-            return this.form.login 
-                && this.form.password 
-                && (this.form.password === this.form.passwordRepeat)
-                && this.form.fullName
-        }
 
-      return this.form.login 
-        && this.form.password 
-        && (this.form.password === this.form.passwordRepeat)
-        && this.form.fullName;
+  computed: {
+    ...mapState({
+      token: (state) => state.registration.token,
+      login: (state) => state.registration.login,
+    }),
+
+    formIsValid() {
+      if (this.form.user === "patient") {
+        return (
+          this.form.login &&
+          this.form.password &&
+          this.form.password === this.form.passwordRepeat &&
+          this.form.fullName
+        );
+      }
+
+      return (
+        this.form.login &&
+        this.form.password &&
+        this.form.password === this.form.passwordRepeat &&
+        this.form.fullName
+      );
+    },
+  },
+
+  methods: {
+    ...mapActions({
+      registartion: "registration/registration",
+    }),
+    ...mapMutations({
+      registrated: "auth/auth_success",
+      clear: "registration/clear",
+    }),
+    async inputRegistartion() {
+      this.loading = true;
+      await this.registartion({
+        fullname: this.form.fullName,
+        login: this.form.login,
+        password: this.form.password,
+      });
+
+      this.registrated({
+        token: this.token,
+        login: this.login,
+      });
+
+      this.clear();
+
+      this.form.fullName = "";
+      this.form.login = "";
+      this.form.password = "";
+      this.form.passwordRepeat = "";
+
+      this.$router.push("/profile");
+
+      this.loading = false;
     },
   },
 };

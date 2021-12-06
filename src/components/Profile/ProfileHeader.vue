@@ -4,17 +4,31 @@
             {{ fullName }}
         </div>
         <button
-            @click="$router.push('/')"
+            @click="cancel"
         >Выйти</button>
     </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+
+
     export default {
         props: {
             fullName: {
                 required: true,
                 type: String
+            }
+        },
+
+        methods: {
+            ...mapMutations({
+                logout: "auth/logout"
+            }),
+
+            cancel() {
+                this.logout();
+                this.$router.push('/')
             }
         }
     }
