@@ -14,7 +14,7 @@
     ></loader>
     <h2 class="welcome__header">Регистрация</h2>
     <div class="welcome__description">
-      Здесь будет описание. Пожалуйста, заполните данные и идентифицируйте себя
+      Пожалуйста, заполните данные и идентифицируйте себя.
     </div>
     <form class="welcome__form">
       <v-text-field
@@ -54,6 +54,9 @@
           href=""
           @click.prevent="inputRegistartion"
           >Зарегистрироваться</a
+        >
+        <a href="" class="welcome__link" @click.prevent="$router.push('/')"
+          >К авторизации</a
         >
       </div>
     </form>

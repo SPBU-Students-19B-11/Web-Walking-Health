@@ -35,7 +35,7 @@ export const authModule = {
 
       const data = response.data;
 
-      console.log(data);
+      // console.log(data);
 
       if (data.code > 299) {
       } else if (data.result.isDoctor === true) {

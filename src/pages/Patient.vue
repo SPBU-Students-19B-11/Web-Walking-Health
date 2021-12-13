@@ -69,7 +69,7 @@
           solo
         ></v-select>
       </div> -->
-      <div class="patients__charts" v-if="show">
+      <div class="patients__charts" v-show="show">
         <!-- <div class="patients__chart chart">
           <div class="chart__header">Количество шагов</div>
           <apexchart type="scatter" :options="options" :series="series">
@@ -106,7 +106,7 @@
           </apexchart>
         </div>
       </div>
-      <div class="patients__charts--no-data" v-else>
+      <div class="patients__charts--no-data" v-show="!show">
         Данных об активности нет
       </div>
     </div>
@@ -241,6 +241,7 @@ button {
   background-color: #364759;
   color: white;
   padding: 10px;
+  max-height: 40px;
   border-radius: 10px;
 
   &:hover {

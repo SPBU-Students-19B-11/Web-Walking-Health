@@ -1,61 +1,59 @@
 <template>
-    <div class="header">
-        <div class="header__name">
-            {{ fullName }}
-        </div>
-        <button
-            @click="cancel"
-        >Выйти</button>
+  <div class="header">
+    <div class="header__name">
+      {{ fullName }}
     </div>
+    <button @click="cancel">Выйти</button>
+  </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations } from "vuex";
 
+export default {
+  props: {
+    fullName: {
+      required: true,
+      type: String,
+    },
+  },
 
-    export default {
-        props: {
-            fullName: {
-                required: true,
-                type: String
-            }
-        },
+  methods: {
+    ...mapMutations({
+      logout: "auth/logout",
+    }),
 
-        methods: {
-            ...mapMutations({
-                logout: "auth/logout"
-            }),
-
-            cancel() {
-                this.logout();
-                this.$router.push('/')
-            }
-        }
-    }
+    cancel() {
+      this.logout();
+      this.$router.push("/");
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.header{
-    background-color: #423189;
-    border-radius: 0px 0px 20px 20px;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
+.header {
+  background-color: #423189;
+  border-radius: 0px 0px 20px 20px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
 
-    &__name{
-        color: #fff;
-        font-size: 24px;
-    }
+  &__name {
+    color: #fff;
+    font-size: 24px;
+  }
 }
 
-button{
-    background-color: #364759;
-    color: white;
-    padding: 10px;
-    border-radius: 10px;
+button {
+  background-color: #364759;
+  color: white;
+  padding: 10px;
+  max-height: 40px;
+  border-radius: 10px;
 
-    &:hover{
-        background-color: #FF5252;
-    }
+  &:hover {
+    background-color: #ff5252;
+  }
 }
 </style>

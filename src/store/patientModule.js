@@ -69,7 +69,7 @@ export const patientModule = {
 
       const data = response.data;
 
-      console.log(data);
+      // console.log(data);
       if (data.code > 299) {
       } else if (data.code === 204) {
         commit("SET_SHOW", false);
@@ -89,10 +89,10 @@ export const patientModule = {
     async getDatesOfActivity({ commit }, login) {
       commit("SET_LOADING", true);
       const response = await axios.get(
-        `https://walkinghealth.pythonanywhere.com/medical/getDates`,
+        `https://walkinghealth.pythonanywhere.com/medical/getDates?patient=${login}`,
         {
           headers: {
-            CurrentUserLogin: login,
+            CurrentUserLogin: localStorage.getItem("login"),
             AuthToken: localStorage.getItem("token"),
           },
         }
@@ -100,7 +100,7 @@ export const patientModule = {
 
       const data = response.data;
 
-      console.log(data);
+      // console.log(data);
       if (data.code > 299) {
       } else {
         commit("SET_DATES", data.result);

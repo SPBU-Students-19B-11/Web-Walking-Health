@@ -31,12 +31,13 @@ export const registrationModule = {
           login: user.login,
           password: user.password,
           doctorLogin: null,
+          stepLength: null,
         }
       );
 
       const data = response.data;
 
-      console.log(data);
+      // console.log(data);
 
       if (data.code > 299) {
         alert("Ошибка, попробуйте заново");

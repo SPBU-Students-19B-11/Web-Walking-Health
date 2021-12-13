@@ -19,7 +19,7 @@
       </button>
     </div>
     <div class="messages">
-      <div class="messages__body">
+      <div class="messages__body" v-show="messages.length">
         <v-card
           style="margin-top: 5px"
           v-for="message in messages"
@@ -29,6 +29,9 @@
           <v-card-subtitle>{{ message.time }}</v-card-subtitle>
           <v-card-text>{{ message.text }}</v-card-text>
         </v-card>
+      </div>
+      <div class="messages__none" v-show="!messages.length">
+        Сообщений пока нет
       </div>
       <div class="messages__footer">
         <v-form>
@@ -143,12 +146,21 @@ button {
 
   &__body {
     margin-top: 15px;
-    border: 2px solid #8a8a8b;
+    border: 1px solid #8a8a8b;
     border-radius: 5px;
-    max-height: 78vh;
+    min-height: 75vh;
+    max-height: 75vh;
     overflow: auto;
     display: flex;
     flex-direction: column-reverse;
+  }
+
+  &__none {
+    padding: 20px;
+    font-size: 20px;
+    min-height: 75vh;
+    max-height: 75vh;
+    line-height: 75vh;
   }
 }
 </style>
